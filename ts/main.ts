@@ -2,10 +2,13 @@ import { addButtonListener, getHeading } from "./functions.js";
 
 const stateEl = getHeading("state");
 const resultEl = getHeading("result");
+const memoryEl = getHeading("memory");
 
 addButtonListener("btnC", () =>
 {
+	const memory = state.memory;
 	state = getCleanState();
+	state.memory = memory;
 	saveState();
 	updateUI();
 });
@@ -68,6 +71,42 @@ addButtonListener("btn%", () =>
 		updateUI();
 	}
 });
+
+const btnMC = addButtonListener("btnMC", () =>
+{
+	state.memory = null;
+	saveState();
+	updateUI();
+});
+const btnMR = addButtonListener("btnMR", () =>
+{
+	if (state.memory == null) return;
+	state.input = state.memory;
+	state.clearInputOnType = true;
+	saveState();
+	updateUI();
+});
+addButtonListener("btnM+", () =>
+{
+	if (state.memory == null) state.memory = "0";
+	state.memory = `${getNum(state.memory) + getNum(state.input)}`;
+	saveState();
+	updateUI();
+});
+addButtonListener("btnM-", () =>
+{
+	if (state.memory == null) state.memory = "0";
+	state.memory = `${getNum(state.memory) - getNum(state.input)}`;
+	saveState();
+	updateUI();
+});
+addButtonListener("btnMS", () =>
+{
+	state.memory = state.input;
+	saveState();
+	updateUI();
+});
+
 
 let state = loadState();
 updateUI();
@@ -145,6 +184,11 @@ function updateUI()
 	}
 	else stateEl.innerText = state.saved;
 	resultEl.innerText = state.input;
+
+	const memEmpty = state.memory == null;
+	btnMC.disabled = memEmpty;
+	btnMR.disabled = memEmpty;
+	memoryEl.innerText = memEmpty ? "" : `M: ${state.memory}`;
 }
 
 
@@ -167,6 +211,7 @@ function getCleanState()
 		saved: null,
 		saved2: null,
 		operation: "",
+		memory: null,
 	} as State
 }
 interface State
@@ -176,5 +221,6 @@ interface State
 	saved: string | null;
 	saved2: string | null;
 	operation: Operation;
+	memory: string | null;
 }
 type Operation = "" | "+" | "-" | "/" | "*"
