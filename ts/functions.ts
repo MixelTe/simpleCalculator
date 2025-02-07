@@ -2,9 +2,9 @@ export function getButton(id: string)
 {
 	return getEl(id, HTMLButtonElement);
 }
-export function getHeading(id: string)
+export function getSpan(id: string)
 {
-	return getEl(id, HTMLHeadingElement);
+	return getEl(id, HTMLSpanElement);
 }
 export function getEl<T extends typeof HTMLElement>(id: string, type: T)
 {

@@ -1,8 +1,8 @@
-import { addButtonListener, getHeading } from "./functions.js";
+import { addButtonListener, getSpan } from "./functions.js";
 
-const stateEl = getHeading("state");
-const resultEl = getHeading("result");
-const memoryEl = getHeading("memory");
+const stateEl = getSpan("state");
+const resultEl = getSpan("result");
+const memoryEl = getSpan("memory");
 
 addButtonListener("btnC", () =>
 {
@@ -22,8 +22,10 @@ addButtonListener("btnDel", () =>
 {
 	if (state.input.length <= 1) state.input = "0";
 	else state.input = state.input.slice(0, state.input.length - 1);
+	state.clearInputOnType = false;
 	saveState();
 	updateUI();
+	resultEl.parentElement?.scroll(resultEl.parentElement.scrollWidth, 0);
 });
 addButtonListener("btn1", () => digit(1));
 addButtonListener("btn2", () => digit(2));
@@ -41,6 +43,7 @@ addButtonListener("btn,", () =>
 		state.input = `${state.input},`;
 	saveState();
 	updateUI();
+	resultEl.parentElement?.scroll(resultEl.parentElement.scrollWidth, 0);
 });
 addButtonListener("btnSign", () =>
 {
@@ -120,6 +123,7 @@ function digit(v: number)
 	state.clearInputOnType = false;
 	saveState();
 	updateUI();
+	resultEl.parentElement?.scroll(resultEl.parentElement.scrollWidth, 0);
 }
 function operation(v: Operation)
 {
@@ -161,6 +165,7 @@ function calc()
 	state.clearInputOnType = true;
 	saveState();
 	updateUI();
+	stateEl.parentElement?.scroll(stateEl.parentElement.scrollWidth, 0);
 }
 function getNum(num: string | null)
 {
@@ -189,6 +194,8 @@ function updateUI()
 	btnMC.disabled = memEmpty;
 	btnMR.disabled = memEmpty;
 	memoryEl.innerText = memEmpty ? "" : `M: ${state.memory}`;
+
+	resultEl.parentElement?.scroll(0, 0);
 }
 
 
