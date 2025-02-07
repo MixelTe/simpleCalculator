@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Simple Calculator</title>
+	<link rel="shortcut icon" type="image/x-icon" href="favicon.ico">
+	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=PT Sans">
+	<link rel="stylesheet" type="text/css" href="styles.css">
+	<script src="out/main.js" type="module"></script>
+</head>
+<body>
+	<div class="calculator">
+		<h2 class="displayState"><span id="state"></span></h2>
+		<h1 class="displayResult"><span id="result">0</span></h1>
+		<h3 class="displayMemory"><span id="memory"></span></h3>
+		<div class="memoryBar">
+			<button disabled id="btnMC">MC</button>
+			<button disabled id="btnMR">MR</button>
+			<button id="btnM+">M+</button>
+			<button id="btnM-">M-</button>
+			<button id="btnMS">MS</button>
+		</div>
+		<div class="btns">
+			<button id="btn%">%</button>
+			<button id="btnCE">CE</button>
+			<button id="btnC">C</button>
+			<button id="btnDel"><svg xmlns="http://www.w3.org/2000/svg" height="1em" width="1em" viewBox="0 -960 960 960" fill="currentColor"><path d="m456-320 104-104 104 104 56-56-104-104 104-104-56-56-104 104-104-104-56 56 104 104-104 104 56 56Zm-96 160q-19 0-36-8.5T296-192L80-480l216-288q11-15 28-23.5t36-8.5h440q33 0 56.5 23.5T880-720v480q0 33-23.5 56.5T800-160H360ZM180-480l180 240h440v-480H360L180-480Zm400 0Z"/></svg></button>
+			<button id="btnInv"><div class="div"><span class="small">1</span><span>x</span></div></button>
+			<button id="btnSq"><span>x</span><span class="upper">2</span></button>
+			<button id="btnSqrt"><span class="sqrt">x</span></button>
+			<button id="btn/">÷</button>
+			<button id="btn7">7</button>
+			<button id="btn8">8</button>
+			<button id="btn9">9</button>
+			<button id="btn*">×</button>
+			<button id="btn4">4</button>
+			<button id="btn5">5</button>
+			<button id="btn6">6</button>
+			<button id="btn-">-</button>
+			<button id="btn1">1</button>
+			<button id="btn2">2</button>
+			<button id="btn3">3</button>
+			<button id="btn+">+</button>
+			<button id="btnSign"><div class="div"><span>+</span><span>-</span></div></button>
+			<button id="btn0">0</button>
+			<button id="btn,">,</button>
+			<button id="btn=">=</button>
+		</div>
+	</div>
+</body>
+</html>
