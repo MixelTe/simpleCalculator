@@ -2,19 +2,21 @@ import { addButtonListener, getSpan } from "./functions.js";
 const stateEl = getSpan("state");
 const resultEl = getSpan("result");
 const memoryEl = getSpan("memory");
-addButtonListener("btnC", () => {
+addButtonListener("btnC", onClear);
+function onClear() {
     const memory = state.memory;
     state = getCleanState();
     state.memory = memory;
     saveState();
     updateUI();
-});
+}
 addButtonListener("btnCE", () => {
     state.input = "0";
     saveState();
     updateUI();
 });
-addButtonListener("btnDel", () => {
+addButtonListener("btnDel", onDel);
+function onDel() {
     if (state.input.length <= 1)
         state.input = "0";
     else
@@ -23,7 +25,7 @@ addButtonListener("btnDel", () => {
     saveState();
     updateUI();
     resultEl.parentElement?.scroll(resultEl.parentElement.scrollWidth, 0);
-});
+}
 addButtonListener("btn1", () => digit(1));
 addButtonListener("btn2", () => digit(2));
 addButtonListener("btn3", () => digit(3));
@@ -34,13 +36,14 @@ addButtonListener("btn7", () => digit(7));
 addButtonListener("btn8", () => digit(8));
 addButtonListener("btn9", () => digit(9));
 addButtonListener("btn0", () => digit(0));
-addButtonListener("btn,", () => {
+addButtonListener("btn,", onComma);
+function onComma() {
     if (!state.input.includes(","))
         state.input = `${state.input},`;
     saveState();
     updateUI();
     resultEl.parentElement?.scroll(resultEl.parentElement.scrollWidth, 0);
-});
+}
 addButtonListener("btnSign", () => {
     if (state.input.startsWith("-"))
         state.input = state.input.slice(1);
@@ -57,7 +60,8 @@ addButtonListener("btn*", () => operation("*"));
 addButtonListener("btn-", () => operation("-"));
 addButtonListener("btn+", () => operation("+"));
 addButtonListener("btn=", calc);
-addButtonListener("btn%", () => {
+addButtonListener("btn%", onPercent);
+function onPercent() {
     if (state.saved != null && state.operation != "" && state.saved2 == null) {
         if (state.operation == "+" || state.operation == "-")
             state.input = `${getNum(state.saved) / 100 * getNum(state.input)}`;
@@ -66,38 +70,70 @@ addButtonListener("btn%", () => {
         saveState();
         updateUI();
     }
-});
-const btnMC = addButtonListener("btnMC", () => {
+}
+const btnMC = addButtonListener("btnMC", onMemoryClear);
+function onMemoryClear() {
     state.memory = null;
     saveState();
     updateUI();
-});
-const btnMR = addButtonListener("btnMR", () => {
+}
+const btnMR = addButtonListener("btnMR", onMemoryRead);
+function onMemoryRead() {
     if (state.memory == null)
         return;
     state.input = state.memory;
     state.clearInputOnType = true;
     saveState();
     updateUI();
-});
-addButtonListener("btnM+", () => {
+}
+addButtonListener("btnM+", onMemoryAdd);
+function onMemoryAdd() {
     if (state.memory == null)
         state.memory = "0";
     state.memory = `${getNum(state.memory) + getNum(state.input)}`;
     saveState();
     updateUI();
-});
-addButtonListener("btnM-", () => {
+}
+addButtonListener("btnM-", onMemorySub);
+function onMemorySub() {
     if (state.memory == null)
         state.memory = "0";
     state.memory = `${getNum(state.memory) - getNum(state.input)}`;
     saveState();
     updateUI();
-});
-addButtonListener("btnMS", () => {
+}
+addButtonListener("btnMS", onMemorySave);
+function onMemorySave() {
     state.memory = state.input;
     saveState();
     updateUI();
+}
+window.addEventListener("keydown", e => {
+    e.preventDefault();
+    const key = e.key;
+    if (e.ctrlKey)
+        return {
+            "l": onMemoryClear,
+            "r": onMemoryRead,
+            "p": onMemoryAdd,
+            "q": onMemorySub,
+            "m": onMemorySave,
+        }[key]?.();
+    const d = parseInt(key, 10);
+    if (isFinite(d))
+        return digit(d);
+    if (["/", "*", "-", "+"].includes(key))
+        return operation(key);
+    ({
+        "Backspace": onDel,
+        ",": onComma,
+        ".": onComma,
+        "%": onPercent,
+        "=": calc,
+        "Enter": calc,
+        "Escape": onClear,
+        "^": () => unary(x => x * x),
+    }[key]?.());
 });
 let state = loadState();
 updateUI();
@@ -106,6 +142,11 @@ function digit(v) {
         state.input = `${v}`;
     else
         state.input = `${state.input}${v}`;
+    if (state.clearInputOnType && state.saved2) {
+        state.operation = "";
+        state.saved2 = null;
+        state.saved = null;
+    }
     state.clearInputOnType = false;
     saveState();
     updateUI();
